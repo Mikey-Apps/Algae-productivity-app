@@ -8,7 +8,7 @@ from scipy.stats import linregress
 st.set_page_config(layout = "wide")
 st.title("Algae metabolite production")
 st.markdown("""
-Estimate annual productivity of a metabolite from 1L of cultivated algae.
+Estimate annual productivity of a metabolite from 1L of cultivated algae.∏
 """)
 
 #---------------------------------------------------------------#
@@ -19,8 +19,8 @@ st.subheader("Input")
 #create default reference samples
 def default_samples():
     return pd.DataFrame([
-            {"sample name": "Chlamy", "Algae dry biomass productivity (g/L)": 1, "%Metabolite from biomass": 1, "Days to harvest": 5.0},
-            {"sample name": "Hsp", "Algae dry biomass productivity (g/L)": 0.9, "%Metabolite from biomass": 5, "Days to harvest": 14}
+            {"sample name": "Algae_strain1", "Algae dry biomass productivity (g/L)": 1.0, "%Metabolite from biomass": 2.00, "Days to harvest": 7.0},
+            {"sample name": "Algae_strain2", "Algae dry biomass productivity (g/L)": 0.9, "%Metabolite from biomass": 0.45, "Days to harvest": 13.0}
         ])
 
 with st.form("samples_form", clear_on_submit=False):
@@ -56,9 +56,6 @@ if submitted_samples:
         st.stop()
 
     st.session_state.samples_df = clean_df
-
-    #st.subheader("Submitted samples:")
-    #st.dataframe(st.session_state.samples_df)
 
 #---------------------------------------------------------------#
 #create plots
@@ -118,7 +115,6 @@ fig.update_layout(
     legend_title="Sample",    
     height=600,
 )
-
 fig.update_xaxes(
     tickmode="array",
     tickvals=np.arange(0, 366, 30),
@@ -137,7 +133,6 @@ fig.add_vline(
     line_dash = "dash",
     line_color = "black"
 )
-
 st.plotly_chart(fig, width = "stretch", theme = None)
 
 
