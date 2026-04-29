@@ -8,7 +8,7 @@ from scipy.stats import linregress
 st.set_page_config(layout = "wide")
 st.title("Algae metabolite production")
 st.markdown("""
-Estimate annual productivity of a metabolite from 1L of cultivated algae.∏
+Estimate annual productivity of a metabolite from 1L of cultivated algae.
 """)
 
 #---------------------------------------------------------------#
@@ -49,11 +49,18 @@ with st.form("samples_form", clear_on_submit=False):
     submitted_samples = st.form_submit_button("Submit")
 
 if submitted_samples:
-    clean_df = edited_df.dropna(subset=required_cols).reset_index(drop=True)
+    clean_df = edited_df.copy()
+    # Convert blank strings / whitespace to missing values
+    clean_df[required_cols] = clean_df[required_cols].replace(r"^\s*$", pd.NA, regex=True)
+    # Drop rows missing any required field
+    clean_df = clean_df.dropna(subset=required_cols).reset_index(drop=True)
 
     if clean_df.empty:
         st.error("Please fill in at least one complete sample.")
         st.stop()
+    
+    if len(clean_df) < len(edited_df):
+        st.warning("Some samples contained missing values. Please make sure every required field is filled in.")    
 
     st.session_state.samples_df = clean_df
 
@@ -135,7 +142,6 @@ fig.add_vline(
 )
 st.plotly_chart(fig, width = "stretch", theme = None)
 
-
 #---------------------------------------------------------------#
 #Summary table
 #---------------------------------------------------------------#
@@ -148,8 +154,8 @@ def annual_production(df):
     return {
         "annual algae harvests": df["harvest#"].iloc[-1],
         "date of final harvest": df["harvest_day"].iloc[-1],
-        "realized annual metabolite production (g)": df["cumulative_metabolite_total"].iloc[-1],
-        "estimated annual metabolite production (g) - normalized to 365 days": y_365
+        "annual metabolite production (g): Realized upon final harvest": df["cumulative_metabolite_total"].iloc[-1],
+        "annual metabolite production (g): Normalized to 365 days": y_365
     }
  
 annual_estimations = {sample: annual_production(df) for sample, df in results_all.items() }
