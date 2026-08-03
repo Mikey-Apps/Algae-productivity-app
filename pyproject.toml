@@ -1,0 +1,24 @@
+[project]
+name = "algae-productivity-app"
+version = "0.1.0"
+description = "prediction of algae biomass yield based on growth conditions"
+readme = "README.md"
+authors = [
+    { name = "Mike Ting", email = "mkyting@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "matplotlib>=3.11.1",
+    "numpy>=2.5.1",
+    "pandas>=3.0.5",
+    "plotly>=6.9.0",
+    "scipy>=1.18.0",
+    "streamlit>=1.60.0",
+]
+
+[tool.uv]
+package = false
+
+[build-system]
+requires = ["uv_build>=0.12.1,<0.13.0"]
+build-backend = "uv_build"
